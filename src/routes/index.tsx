@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   TrendingUp,
@@ -85,12 +85,12 @@ function Nav() {
                 {l.label}
               </a>
             ))}
-            <a
-              href="#demo"
+            <Link
+              to="/analyze"
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"
             >
-              Try Demo <ArrowRight size={14} />
-            </a>
+              Analyzer <ArrowRight size={14} />
+            </Link>
           </div>
 
           <button
@@ -158,12 +158,12 @@ function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="#demo"
+            <Link
+              to="/analyze"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/20"
             >
-              Explore Dashboard <ArrowRight size={18} />
-            </a>
+              Analyze My Salary <ArrowRight size={18} />
+            </Link>
             <a
               href="#phases"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3.5 text-base font-semibold text-foreground transition-all hover:bg-secondary hover:border-glow"

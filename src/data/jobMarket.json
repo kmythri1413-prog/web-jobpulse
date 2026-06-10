@@ -1,0 +1,624 @@
+{
+  "currency": "INR LPA",
+  "updatedAt": "2026-06-10",
+  "locations": [
+    "Bangalore",
+    "Hyderabad",
+    "Pune",
+    "Mumbai",
+    "Delhi NCR",
+    "Chennai",
+    "Remote",
+    "Kolkata",
+    "Ahmedabad",
+    "Noida"
+  ],
+  "experienceLevels": [
+    "Entry (0-2 yrs)",
+    "Mid (3-5 yrs)",
+    "Senior (6-9 yrs)",
+    "Lead (10+ yrs)"
+  ],
+  "roles": [
+    {
+      "role": "Software Engineer",
+      "baseMedian": 9.0,
+      "demand": "High",
+      "openings": 3024,
+      "topSkills": [
+        "Java",
+        "Python",
+        "SQL",
+        "Git",
+        "REST APIs",
+        "Data Structures"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 10.8,
+        "Hyderabad": 9.5,
+        "Pune": 9.0,
+        "Mumbai": 10.3,
+        "Delhi NCR": 9.9,
+        "Chennai": 8.5,
+        "Remote": 9.7,
+        "Kolkata": 7.6,
+        "Ahmedabad": 7.2,
+        "Noida": 9.2
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 6.3,
+        "Mid (3-5 yrs)": 10.8,
+        "Senior (6-9 yrs)": 17.1,
+        "Lead (10+ yrs)": 25.2
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          47,
+          48,
+          49,
+          47,
+          44,
+          55
+        ]
+      }
+    },
+    {
+      "role": "Frontend Developer",
+      "baseMedian": 8.0,
+      "demand": "Moderate",
+      "openings": 2624,
+      "topSkills": [
+        "React",
+        "TypeScript",
+        "CSS",
+        "HTML",
+        "Next.js",
+        "Redux"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 9.6,
+        "Hyderabad": 8.4,
+        "Pune": 8.0,
+        "Mumbai": 9.2,
+        "Delhi NCR": 8.8,
+        "Chennai": 7.6,
+        "Remote": 8.6,
+        "Kolkata": 6.8,
+        "Ahmedabad": 6.4,
+        "Noida": 8.2
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 5.6,
+        "Mid (3-5 yrs)": 9.6,
+        "Senior (6-9 yrs)": 15.2,
+        "Lead (10+ yrs)": 22.4
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          70,
+          65,
+          59,
+          55,
+          55,
+          56
+        ]
+      }
+    },
+    {
+      "role": "Backend Developer",
+      "baseMedian": 9.5,
+      "demand": "High",
+      "openings": 9479,
+      "topSkills": [
+        "Node.js",
+        "Python",
+        "PostgreSQL",
+        "Docker",
+        "Microservices",
+        "Redis"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 11.4,
+        "Hyderabad": 10.0,
+        "Pune": 9.5,
+        "Mumbai": 10.9,
+        "Delhi NCR": 10.5,
+        "Chennai": 9.0,
+        "Remote": 10.3,
+        "Kolkata": 8.1,
+        "Ahmedabad": 7.6,
+        "Noida": 9.7
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 6.6,
+        "Mid (3-5 yrs)": 11.4,
+        "Senior (6-9 yrs)": 18.1,
+        "Lead (10+ yrs)": 26.6
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          58,
+          69,
+          69,
+          80,
+          87,
+          88
+        ]
+      }
+    },
+    {
+      "role": "Full Stack Developer",
+      "baseMedian": 10.0,
+      "demand": "High",
+      "openings": 8559,
+      "topSkills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "AWS",
+        "TypeScript",
+        "Docker"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 12.0,
+        "Hyderabad": 10.5,
+        "Pune": 10.0,
+        "Mumbai": 11.5,
+        "Delhi NCR": 11.0,
+        "Chennai": 9.5,
+        "Remote": 10.8,
+        "Kolkata": 8.5,
+        "Ahmedabad": 8.0,
+        "Noida": 10.2
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 7.0,
+        "Mid (3-5 yrs)": 12.0,
+        "Senior (6-9 yrs)": 19.0,
+        "Lead (10+ yrs)": 28.0
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          65,
+          59,
+          58,
+          65,
+          69,
+          71
+        ]
+      }
+    },
+    {
+      "role": "Data Scientist",
+      "baseMedian": 12.0,
+      "demand": "High",
+      "openings": 3747,
+      "topSkills": [
+        "Python",
+        "Machine Learning",
+        "SQL",
+        "Pandas",
+        "TensorFlow",
+        "Statistics"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 14.4,
+        "Hyderabad": 12.6,
+        "Pune": 12.0,
+        "Mumbai": 13.8,
+        "Delhi NCR": 13.2,
+        "Chennai": 11.4,
+        "Remote": 13.0,
+        "Kolkata": 10.2,
+        "Ahmedabad": 9.6,
+        "Noida": 12.2
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 8.4,
+        "Mid (3-5 yrs)": 14.4,
+        "Senior (6-9 yrs)": 22.8,
+        "Lead (10+ yrs)": 33.6
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          55,
+          52,
+          48,
+          54,
+          51,
+          56
+        ]
+      }
+    },
+    {
+      "role": "Data Analyst",
+      "baseMedian": 7.0,
+      "demand": "Moderate",
+      "openings": 6835,
+      "topSkills": [
+        "SQL",
+        "Excel",
+        "Power BI",
+        "Python",
+        "Tableau",
+        "Statistics"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 8.4,
+        "Hyderabad": 7.4,
+        "Pune": 7.0,
+        "Mumbai": 8.0,
+        "Delhi NCR": 7.7,
+        "Chennai": 6.6,
+        "Remote": 7.6,
+        "Kolkata": 6.0,
+        "Ahmedabad": 5.6,
+        "Noida": 7.1
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 4.9,
+        "Mid (3-5 yrs)": 8.4,
+        "Senior (6-9 yrs)": 13.3,
+        "Lead (10+ yrs)": 19.6
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          66,
+          61,
+          69,
+          80,
+          77,
+          83
+        ]
+      }
+    },
+    {
+      "role": "DevOps Engineer",
+      "baseMedian": 11.0,
+      "demand": "High",
+      "openings": 2491,
+      "topSkills": [
+        "AWS",
+        "Kubernetes",
+        "Docker",
+        "Terraform",
+        "CI/CD",
+        "Linux"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 13.2,
+        "Hyderabad": 11.6,
+        "Pune": 11.0,
+        "Mumbai": 12.6,
+        "Delhi NCR": 12.1,
+        "Chennai": 10.4,
+        "Remote": 11.9,
+        "Kolkata": 9.3,
+        "Ahmedabad": 8.8,
+        "Noida": 11.2
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 7.7,
+        "Mid (3-5 yrs)": 13.2,
+        "Senior (6-9 yrs)": 20.9,
+        "Lead (10+ yrs)": 30.8
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          65,
+          70,
+          82,
+          82,
+          78,
+          73
+        ]
+      }
+    },
+    {
+      "role": "Machine Learning Engineer",
+      "baseMedian": 14.0,
+      "demand": "Very High",
+      "openings": 4933,
+      "topSkills": [
+        "Python",
+        "PyTorch",
+        "MLOps",
+        "AWS",
+        "Deep Learning",
+        "SQL"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 16.8,
+        "Hyderabad": 14.7,
+        "Pune": 14.0,
+        "Mumbai": 16.1,
+        "Delhi NCR": 15.4,
+        "Chennai": 13.3,
+        "Remote": 15.1,
+        "Kolkata": 11.9,
+        "Ahmedabad": 11.2,
+        "Noida": 14.3
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 9.8,
+        "Mid (3-5 yrs)": 16.8,
+        "Senior (6-9 yrs)": 26.6,
+        "Lead (10+ yrs)": 39.2
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          72,
+          68,
+          69,
+          66,
+          72,
+          74
+        ]
+      }
+    },
+    {
+      "role": "Product Manager",
+      "baseMedian": 16.0,
+      "demand": "Very High",
+      "openings": 8628,
+      "topSkills": [
+        "Roadmapping",
+        "Analytics",
+        "SQL",
+        "Agile",
+        "Stakeholder Mgmt",
+        "UX"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 19.2,
+        "Hyderabad": 16.8,
+        "Pune": 16.0,
+        "Mumbai": 18.4,
+        "Delhi NCR": 17.6,
+        "Chennai": 15.2,
+        "Remote": 17.3,
+        "Kolkata": 13.6,
+        "Ahmedabad": 12.8,
+        "Noida": 16.3
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 11.2,
+        "Mid (3-5 yrs)": 19.2,
+        "Senior (6-9 yrs)": 30.4,
+        "Lead (10+ yrs)": 44.8
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          70,
+          69,
+          74,
+          79,
+          79,
+          81
+        ]
+      }
+    },
+    {
+      "role": "UI/UX Designer",
+      "baseMedian": 7.5,
+      "demand": "Moderate",
+      "openings": 2369,
+      "topSkills": [
+        "Figma",
+        "Prototyping",
+        "User Research",
+        "Design Systems",
+        "Wireframing",
+        "Adobe XD"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 9.0,
+        "Hyderabad": 7.9,
+        "Pune": 7.5,
+        "Mumbai": 8.6,
+        "Delhi NCR": 8.2,
+        "Chennai": 7.1,
+        "Remote": 8.1,
+        "Kolkata": 6.4,
+        "Ahmedabad": 6.0,
+        "Noida": 7.7
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 5.2,
+        "Mid (3-5 yrs)": 9.0,
+        "Senior (6-9 yrs)": 14.2,
+        "Lead (10+ yrs)": 21.0
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          63,
+          74,
+          75,
+          74,
+          82,
+          88
+        ]
+      }
+    },
+    {
+      "role": "QA Engineer",
+      "baseMedian": 6.5,
+      "demand": "Steady",
+      "openings": 5622,
+      "topSkills": [
+        "Selenium",
+        "Automation",
+        "API Testing",
+        "Jira",
+        "Python",
+        "Cypress"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 7.8,
+        "Hyderabad": 6.8,
+        "Pune": 6.5,
+        "Mumbai": 7.5,
+        "Delhi NCR": 7.2,
+        "Chennai": 6.2,
+        "Remote": 7.0,
+        "Kolkata": 5.5,
+        "Ahmedabad": 5.2,
+        "Noida": 6.6
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 4.5,
+        "Mid (3-5 yrs)": 7.8,
+        "Senior (6-9 yrs)": 12.3,
+        "Lead (10+ yrs)": 18.2
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          76,
+          77,
+          81,
+          76,
+          77,
+          72
+        ]
+      }
+    },
+    {
+      "role": "Cloud Architect",
+      "baseMedian": 22.0,
+      "demand": "Very High",
+      "openings": 6368,
+      "topSkills": [
+        "AWS",
+        "Azure",
+        "GCP",
+        "Terraform",
+        "Networking",
+        "Security"
+      ],
+      "salaryByLocation": {
+        "Bangalore": 26.4,
+        "Hyderabad": 23.1,
+        "Pune": 22.0,
+        "Mumbai": 25.3,
+        "Delhi NCR": 24.2,
+        "Chennai": 20.9,
+        "Remote": 23.8,
+        "Kolkata": 18.7,
+        "Ahmedabad": 17.6,
+        "Noida": 22.4
+      },
+      "salaryByExperience": {
+        "Entry (0-2 yrs)": 15.4,
+        "Mid (3-5 yrs)": 26.4,
+        "Senior (6-9 yrs)": 41.8,
+        "Lead (10+ yrs)": 61.6
+      },
+      "trend": {
+        "months": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun"
+        ],
+        "values": [
+          59,
+          55,
+          55,
+          67,
+          71,
+          71
+        ]
+      }
+    }
+  ]
+}
