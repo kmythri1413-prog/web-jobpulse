@@ -12,7 +12,26 @@ import {
   DollarSign,
   Activity,
   Award,
+  FileText,
+  Download,
 } from "lucide-react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  Cell,
+  CartesianGrid,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import { getJobMarket, type JobRole } from "@/lib/jobMarket.functions";
 
 const jobMarketQuery = queryOptions({
@@ -28,13 +47,13 @@ export const Route = createFileRoute("/analyze")({
       {
         name: "description",
         content:
-          "Enter your job role, location and average package to get a live salary analysis: market comparison, salary range, demand and top skills.",
+          "Enter your job role, location and average package to get a live salary analysis: market comparison, salary range, demand and top skills. Export PDF & CSV reports.",
       },
       { property: "og:title", content: "Salary Analyzer | JobPulse" },
       {
         property: "og:description",
         content:
-          "Live salary analysis based on your job role, location and package.",
+          "Live salary analysis with interactive charts and exportable PDF/CSV reports.",
       },
     ],
   }),
@@ -68,6 +87,16 @@ function formatLPA(v: number) {
   return `₹${v.toFixed(1)} LPA`;
 }
 
+type Analysis = {
+  marketMedian: number;
+  userPkg: number;
+  hasPkg: boolean;
+  diffPct: number;
+  low: number;
+  high: number;
+  pos: number;
+};
+
 function Analyze() {
   const { data: jobMarket } = useSuspenseQuery(jobMarketQuery);
 
@@ -81,7 +110,7 @@ function Analyze() {
     [jobMarket.roles, role],
   );
 
-  const result = useMemo(() => {
+  const result = useMemo<Analysis | null>(() => {
     if (!submitted || !roleData) return null;
     const marketMedian =
       roleData.salaryByLocation[location] ?? roleData.baseMedian;
@@ -96,7 +125,187 @@ function Analyze() {
     return { marketMedian, userPkg, hasPkg, diffPct, low, high, pos };
   }, [submitted, roleData, location, pkg]);
 
-  const maxTrend = roleData ? Math.max(...roleData.trend.values, 1) : 1;
+  // ---- Chart data ----
+  const comparisonData = useMemo(() => {
+    if (!result) return [];
+    const rows: { label: string; value: number; key: string }[] = [
+      { label: "Range low", value: result.low, key: "low" },
+      { label: "Median", value: result.marketMedian, key: "median" },
+      { label: "Range high", value: result.high, key: "high" },
+    ];
+    if (result.hasPkg)
+      rows.splice(2, 0, {
+        label: "You",
+        value: +result.userPkg.toFixed(1),
+        key: "you",
+      });
+    return rows;
+  }, [result]);
+
+  const locationData = useMemo(
+    () =>
+      roleData
+        ? Object.entries(roleData.salaryByLocation).map(([loc, val]) => ({
+            location: loc,
+            value: Number(val),
+            current: loc === location,
+          }))
+        : [],
+    [roleData, location],
+  );
+
+  const trendData = useMemo(
+    () =>
+      roleData
+        ? roleData.trend.months.map((m, i) => ({
+            month: m,
+            openings: roleData.trend.values[i],
+          }))
+        : [],
+    [roleData],
+  );
+
+  const expData = useMemo(
+    () =>
+      roleData
+        ? Object.entries(roleData.salaryByExperience).map(([lvl, val]) => ({
+            level: lvl,
+            value: Number(val),
+          }))
+        : [],
+    [roleData],
+  );
+
+  const compConfig: ChartConfig = {
+    value: { label: "LPA", color: "var(--primary)" },
+  };
+  const locConfig: ChartConfig = {
+    value: { label: "Median LPA", color: "var(--primary)" },
+  };
+  const trendConfig: ChartConfig = {
+    openings: { label: "Open roles", color: "var(--primary)" },
+  };
+  const expConfig: ChartConfig = {
+    value: { label: "LPA", color: "var(--accent)" },
+  };
+
+  const exportCSV = () => {
+    if (!result || !roleData) return;
+    const rows: (string | number)[][] = [
+      ["JobPulse Salary Report"],
+      ["Generated", new Date().toLocaleString()],
+      [],
+      ["Search"],
+      ["Role", role],
+      ["Location", location],
+      ["Your package (LPA)", result.hasPkg ? result.userPkg : "—"],
+      [],
+      ["Summary"],
+      ["Market median (LPA)", result.marketMedian],
+      ["Range low (LPA)", result.low],
+      ["Range high (LPA)", result.high],
+      [
+        "Difference vs median (%)",
+        result.hasPkg ? result.diffPct.toFixed(1) : "—",
+      ],
+      ["Hiring demand", roleData.demand],
+      ["Open roles", roleData.openings],
+      [],
+      ["Median salary by location (LPA)"],
+      ...locationData.map((d) => [d.location, d.value]),
+      [],
+      ["Pay by experience (LPA)"],
+      ...expData.map((d) => [d.level, d.value]),
+      [],
+      ["6-month hiring trend (open roles)"],
+      ...trendData.map((d) => [d.month, d.openings]),
+      [],
+      ["Top skills"],
+      ...roleData.topSkills.map((s) => [s]),
+    ];
+    const csv = rows
+      .map((r) =>
+        r
+          .map((c) => {
+            const s = String(c);
+            return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+          })
+          .join(","),
+      )
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `jobpulse-${role}-${location}.csv`.replace(/\s+/g, "-");
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportPDF = async () => {
+    if (!result || !roleData) return;
+    const { default: jsPDF } = await import("jspdf");
+    const autoTable = (await import("jspdf-autotable")).default;
+    const doc = new jsPDF();
+    const rupee = (v: number) => `Rs ${v.toFixed(1)} LPA`;
+
+    doc.setFontSize(18);
+    doc.text("JobPulse Salary Report", 14, 20);
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text(`Generated ${new Date().toLocaleString()}`, 14, 27);
+    doc.setTextColor(0);
+
+    autoTable(doc, {
+      startY: 34,
+      head: [["Search", "Value"]],
+      body: [
+        ["Role", role],
+        ["Location", location],
+        ["Your package", result.hasPkg ? rupee(result.userPkg) : "—"],
+      ],
+      theme: "striped",
+    });
+
+    autoTable(doc, {
+      head: [["Summary", "Value"]],
+      body: [
+        ["Market median", rupee(result.marketMedian)],
+        ["Typical range", `${rupee(result.low)} – ${rupee(result.high)}`],
+        [
+          "Difference vs median",
+          result.hasPkg
+            ? `${result.diffPct >= 0 ? "+" : ""}${result.diffPct.toFixed(1)}%`
+            : "—",
+        ],
+        ["Hiring demand", roleData.demand],
+        ["Open roles", String(roleData.openings)],
+      ],
+      theme: "striped",
+    });
+
+    autoTable(doc, {
+      head: [["Location", "Median (LPA)"]],
+      body: locationData.map((d) => [d.location, d.value.toFixed(1)]),
+    });
+
+    autoTable(doc, {
+      head: [["Experience", "Pay (LPA)"]],
+      body: expData.map((d) => [d.level, d.value.toFixed(1)]),
+    });
+
+    autoTable(doc, {
+      head: [["Month", "Open roles"]],
+      body: trendData.map((d) => [d.month, String(d.openings)]),
+    });
+
+    autoTable(doc, {
+      head: [["Top skills"]],
+      body: roleData.topSkills.map((s) => [s]),
+    });
+
+    doc.save(`jobpulse-${role}-${location}.pdf`.replace(/\s+/g, "-"));
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -191,6 +400,21 @@ function Analyze() {
 
         {result && roleData && (
           <section className="mt-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-end gap-3">
+              <button
+                onClick={exportCSV}
+                className="flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm font-medium transition-colors hover:bg-secondary"
+              >
+                <Download size={15} /> Export CSV
+              </button>
+              <button
+                onClick={exportPDF}
+                className="flex h-9 items-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                <FileText size={15} /> Export PDF
+              </button>
+            </div>
+
             {result.hasPkg && (
               <div
                 className={`flex items-start gap-3 rounded-2xl border p-5 ${
@@ -243,25 +467,106 @@ function Analyze() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 className="mb-4 flex items-center gap-2 font-semibold">
-                <MapPin size={18} className="text-primary" /> Salary range in{" "}
-                {location}
+              <h3 className="mb-1 flex items-center gap-2 font-semibold">
+                <DollarSign size={18} className="text-primary" /> You vs the
+                market
               </h3>
-              <div className="relative h-3 rounded-full bg-secondary">
-                <div className="absolute inset-y-0 left-[15%] right-[15%] rounded-full bg-gradient-to-r from-primary/40 via-primary to-accent" />
-                {result.hasPkg && (
-                  <div
-                    className="absolute -top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-background bg-foreground shadow-lg"
-                    style={{ left: `${result.pos}%` }}
-                    title={`You: ${formatLPA(result.userPkg)}`}
+              <p className="mb-4 text-sm text-muted-foreground">
+                Your package compared with the {location} range for {role}.
+              </p>
+              <ChartContainer config={compConfig} className="h-[240px] w-full">
+                <BarChart data={comparisonData} margin={{ top: 8 }}>
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
                   />
-                )}
-              </div>
-              <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-                <span>{formatLPA(result.low)}</span>
-                <span>Median {formatLPA(result.marketMedian)}</span>
-                <span>{formatLPA(result.high)}</span>
-              </div>
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    width={36}
+                    tickFormatter={(v) => `₹${v}`}
+                  />
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        formatter={(v) => formatLPA(Number(v))}
+                      />
+                    }
+                  />
+                  <ReferenceLine
+                    y={result.marketMedian}
+                    stroke="var(--muted-foreground)"
+                    strokeDasharray="4 4"
+                  />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} isAnimationActive={false}>
+                    {comparisonData.map((d) => (
+                      <Cell
+                        key={d.key}
+                        fill={
+                          d.key === "you"
+                            ? "var(--accent)"
+                            : d.key === "median"
+                              ? "var(--primary)"
+                              : "color-mix(in oklch, var(--muted-foreground) 45%, transparent)"
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 className="mb-1 flex items-center gap-2 font-semibold">
+                <MapPin size={18} className="text-primary" /> Median pay by city
+              </h3>
+              <p className="mb-4 text-sm text-muted-foreground">
+                {location} is highlighted. Hover any bar for the exact figure.
+              </p>
+              <ChartContainer config={locConfig} className="h-[260px] w-full">
+                <BarChart data={locationData} margin={{ top: 8 }}>
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="location"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    angle={-30}
+                    textAnchor="end"
+                    height={60}
+                    interval={0}
+                    fontSize={11}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    width={36}
+                    tickFormatter={(v) => `₹${v}`}
+                  />
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        formatter={(v) => formatLPA(Number(v))}
+                      />
+                    }
+                  />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} isAnimationActive={false}>
+                    {locationData.map((d) => (
+                      <Cell
+                        key={d.location}
+                        fill={
+                          d.current
+                            ? "var(--accent)"
+                            : "color-mix(in oklch, var(--primary) 55%, transparent)"
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -270,54 +575,104 @@ function Analyze() {
                   <TrendingUp size={18} className="text-primary" /> 6-month
                   hiring trend
                 </h3>
-                <div className="flex h-40 items-end gap-2">
-                  {roleData.trend.values.map((v, i) => (
-                    <div
-                      key={i}
-                      className="flex flex-1 flex-col items-center gap-1.5"
-                    >
-                      <div
-                        className="w-full rounded-t bg-gradient-to-t from-primary/30 to-primary transition-all"
-                        style={{ height: `${(v / maxTrend) * 100}%` }}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {roleData.trend.months[i]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <ChartContainer
+                  config={trendConfig}
+                  className="h-[220px] w-full"
+                >
+                  <AreaChart data={trendData} margin={{ top: 8 }}>
+                    <defs>
+                      <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop
+                          offset="5%"
+                          stopColor="var(--primary)"
+                          stopOpacity={0.4}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="var(--primary)"
+                          stopOpacity={0.02}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      width={40}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="openings"
+                      stroke="var(--primary)"
+                      strokeWidth={2}
+                      fill="url(#trendFill)"
+                    />
+                  </AreaChart>
+                </ChartContainer>
               </div>
 
               <div className="rounded-2xl border border-border bg-card p-5">
                 <h3 className="mb-4 flex items-center gap-2 font-semibold">
-                  <Award size={18} className="text-primary" /> In-demand skills
+                  <Award size={18} className="text-primary" /> Pay by experience
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {roleData.topSkills.map((s) => (
-                    <span
-                      key={s}
-                      className="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-                <h4 className="mb-2 mt-5 text-sm font-medium text-muted-foreground">
-                  Pay by experience
-                </h4>
-                <div className="space-y-1.5">
-                  {Object.entries(roleData.salaryByExperience).map(
-                    ([lvl, val]) => (
-                      <div
-                        key={lvl}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span className="text-muted-foreground">{lvl}</span>
-                        <span className="font-medium">{formatLPA(val)}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
+                <ChartContainer config={expConfig} className="h-[220px] w-full">
+                  <BarChart
+                    data={expData}
+                    layout="vertical"
+                    margin={{ left: 8 }}
+                  >
+                    <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+                    <XAxis
+                      type="number"
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(v) => `₹${v}`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="level"
+                      tickLine={false}
+                      axisLine={false}
+                      width={90}
+                      fontSize={11}
+                    />
+                    <ChartTooltip
+                      content={
+                        <ChartTooltipContent
+                          formatter={(v) => formatLPA(Number(v))}
+                        />
+                      }
+                    />
+                    <Bar
+                      dataKey="value"
+                      fill="var(--accent)"
+                      radius={[0, 6, 6, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                <Award size={18} className="text-primary" /> In-demand skills
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {roleData.topSkills.map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm"
+                  >
+                    {s}
+                  </span>
+                ))}
               </div>
             </div>
 
