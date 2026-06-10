@@ -81,10 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Track salary trends, in-demand skills, and job market dynamics with data-driven insights for entry-level job seekers." },
       { name: "author", content: "JobPulse" },
       { property: "og:title", content: "JobPulse | Job Market Analysis & Salary Tracker" },
-      { property: "og:description", content: "Track salary trends, in-demand skills, and job market dynamics with data-driven insights." },
+      { property: "og:description", content: "Track salary trends, in-demand skills, and job market dynamics with data-driven insights for entry-level job seekers." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@JobPulse" },
+      { name: "twitter:title", content: "JobPulse | Job Market Analysis & Salary Tracker" },
+      { name: "twitter:description", content: "Track salary trends, in-demand skills, and job market dynamics with data-driven insights for entry-level job seekers." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/80661f33-eb84-4972-ac0c-22deb151c7bc/id-preview-efa87415--f8c4d1ff-1e04-4425-8252-7c91ec18336f.lovable.app-1781078113652.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/80661f33-eb84-4972-ac0c-22deb151c7bc/id-preview-efa87415--f8c4d1ff-1e04-4425-8252-7c91ec18336f.lovable.app-1781078113652.png" },
     ],
     links: [
       {
