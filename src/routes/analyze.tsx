@@ -510,7 +510,7 @@ function Analyze() {
                             ? "var(--accent)"
                             : d.key === "median"
                               ? "var(--primary)"
-                              : "color-mix(in oklch, var(--muted-foreground) 0.45, transparent)"
+                              : "color-mix(in oklch, var(--muted-foreground) 45%, transparent)"
                         }
                       />
                     ))}
@@ -560,7 +560,7 @@ function Analyze() {
                         fill={
                           d.current
                             ? "var(--accent)"
-                            : "color-mix(in oklch, var(--primary) 0.55, transparent)"
+                            : "color-mix(in oklch, var(--primary) 55%, transparent)"
                         }
                       />
                     ))}
