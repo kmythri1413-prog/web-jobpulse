@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
   Zap,
@@ -12,7 +13,13 @@ import {
   Activity,
   Award,
 } from "lucide-react";
-import jobMarket from "@/data/jobMarket.json";
+import { getJobMarket, type JobRole } from "@/lib/jobMarket.functions";
+
+const jobMarketQuery = queryOptions({
+  queryKey: ["job-market"],
+  queryFn: () => getJobMarket(),
+  staleTime: 5 * 60_000,
+});
 
 export const Route = createFileRoute("/analyze")({
   head: () => ({
@@ -31,49 +38,68 @@ export const Route = createFileRoute("/analyze")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(jobMarketQuery),
   component: Analyze,
+  errorComponent: ({ error }) => {
+    const router = useRouter();
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
+        <h1 className="text-xl font-semibold text-foreground">
+          Couldn't load market data
+        </h1>
+        <p className="max-w-sm text-sm text-muted-foreground">{error.message}</p>
+        <button
+          onClick={() => router.invalidate()}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  },
+  notFoundComponent: () => (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <p className="text-muted-foreground">No market data found.</p>
+    </div>
+  ),
 });
-
-type RoleData = (typeof jobMarket.roles)[number];
 
 function formatLPA(v: number) {
   return `₹${v.toFixed(1)} LPA`;
 }
 
 function Analyze() {
-  const [role, setRole] = useState(jobMarket.roles[0].role);
-  const [location, setLocation] = useState(jobMarket.locations[0]);
+  const { data: jobMarket } = useSuspenseQuery(jobMarketQuery);
+
+  const [role, setRole] = useState(jobMarket.roles[0]?.role ?? "");
+  const [location, setLocation] = useState(jobMarket.locations[0] ?? "");
   const [pkg, setPkg] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const roleData = useMemo<RoleData>(
+  const roleData = useMemo<JobRole>(
     () => jobMarket.roles.find((r) => r.role === role) ?? jobMarket.roles[0],
-    [role],
+    [jobMarket.roles, role],
   );
 
   const result = useMemo(() => {
-    if (!submitted) return null;
+    if (!submitted || !roleData) return null;
     const marketMedian =
-      roleData.salaryByLocation[
-        location as keyof typeof roleData.salaryByLocation
-      ] ?? roleData.baseMedian;
+      roleData.salaryByLocation[location] ?? roleData.baseMedian;
     const userPkg = parseFloat(pkg);
     const hasPkg = !Number.isNaN(userPkg) && userPkg > 0;
     const diffPct = hasPkg ? ((userPkg - marketMedian) / marketMedian) * 100 : 0;
     const low = +(marketMedian * 0.78).toFixed(1);
     const high = +(marketMedian * 1.45).toFixed(1);
-    // position of user package within range (0-100)
     const pos = hasPkg
       ? Math.max(0, Math.min(100, ((userPkg - low) / (high - low)) * 100))
       : 50;
     return { marketMedian, userPkg, hasPkg, diffPct, low, high, pos };
   }, [submitted, roleData, location, pkg]);
 
-  const maxTrend = Math.max(...roleData.trend.values);
+  const maxTrend = roleData ? Math.max(...roleData.trend.values, 1) : 1;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Top bar */}
       <header className="border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
@@ -103,7 +129,6 @@ function Analyze() {
           </p>
         </div>
 
-        {/* Input form */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -164,10 +189,8 @@ function Analyze() {
           </button>
         </form>
 
-        {/* Results */}
-        {result && (
+        {result && roleData && (
           <section className="mt-8 space-y-6">
-            {/* Comparison banner */}
             {result.hasPkg && (
               <div
                 className={`flex items-start gap-3 rounded-2xl border p-5 ${
@@ -198,7 +221,6 @@ function Analyze() {
               </div>
             )}
 
-            {/* Stat cards */}
             <div className="grid gap-4 sm:grid-cols-3">
               <StatCard
                 icon={<DollarSign size={18} />}
@@ -220,7 +242,6 @@ function Analyze() {
               />
             </div>
 
-            {/* Salary range bar */}
             <div className="rounded-2xl border border-border bg-card p-5">
               <h3 className="mb-4 flex items-center gap-2 font-semibold">
                 <MapPin size={18} className="text-primary" /> Salary range in{" "}
@@ -243,9 +264,7 @@ function Analyze() {
               </div>
             </div>
 
-            {/* Two column: trend + skills */}
             <div className="grid gap-4 md:grid-cols-2">
-              {/* Trend */}
               <div className="rounded-2xl border border-border bg-card p-5">
                 <h3 className="mb-4 flex items-center gap-2 font-semibold">
                   <TrendingUp size={18} className="text-primary" /> 6-month
@@ -269,7 +288,6 @@ function Analyze() {
                 </div>
               </div>
 
-              {/* Skills */}
               <div className="rounded-2xl border border-border bg-card p-5">
                 <h3 className="mb-4 flex items-center gap-2 font-semibold">
                   <Award size={18} className="text-primary" /> In-demand skills
@@ -304,8 +322,7 @@ function Analyze() {
             </div>
 
             <p className="text-center text-xs text-muted-foreground">
-              Data generated by JobPulse · {jobMarket.currency} · updated{" "}
-              {jobMarket.updatedAt}
+              Live data from JobPulse Cloud · {jobMarket.currency}
             </p>
           </section>
         )}
