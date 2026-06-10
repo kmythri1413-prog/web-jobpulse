@@ -85,12 +85,12 @@ function Nav() {
                 {l.label}
               </a>
             ))}
-            <a
-              href="#demo"
+            <Link
+              to="/analyze"
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20"
             >
-              Try Demo <ArrowRight size={14} />
-            </a>
+              Analyzer <ArrowRight size={14} />
+            </Link>
           </div>
 
           <button
