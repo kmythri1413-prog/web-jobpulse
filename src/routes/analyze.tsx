@@ -177,16 +177,16 @@ function Analyze() {
   );
 
   const compConfig: ChartConfig = {
-    value: { label: "LPA", color: "hsl(var(--primary))" },
+    value: { label: "LPA", color: "var(--primary)" },
   };
   const locConfig: ChartConfig = {
-    value: { label: "Median LPA", color: "hsl(var(--primary))" },
+    value: { label: "Median LPA", color: "var(--primary)" },
   };
   const trendConfig: ChartConfig = {
-    openings: { label: "Open roles", color: "hsl(var(--primary))" },
+    openings: { label: "Open roles", color: "var(--primary)" },
   };
   const expConfig: ChartConfig = {
-    value: { label: "LPA", color: "hsl(var(--accent))" },
+    value: { label: "LPA", color: "var(--accent)" },
   };
 
   const exportCSV = () => {
@@ -498,7 +498,7 @@ function Analyze() {
                   />
                   <ReferenceLine
                     y={result.marketMedian}
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="var(--muted-foreground)"
                     strokeDasharray="4 4"
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
@@ -507,10 +507,10 @@ function Analyze() {
                         key={d.key}
                         fill={
                           d.key === "you"
-                            ? "hsl(var(--accent))"
+                            ? "var(--accent)"
                             : d.key === "median"
-                              ? "hsl(var(--primary))"
-                              : "hsl(var(--muted-foreground) / 0.45)"
+                              ? "var(--primary)"
+                              : "color-mix(in oklch, var(--muted-foreground) 0.45, transparent)"
                         }
                       />
                     ))}
@@ -559,8 +559,8 @@ function Analyze() {
                         key={d.location}
                         fill={
                           d.current
-                            ? "hsl(var(--accent))"
-                            : "hsl(var(--primary) / 0.55)"
+                            ? "var(--accent)"
+                            : "color-mix(in oklch, var(--primary) 0.55, transparent)"
                         }
                       />
                     ))}
@@ -584,12 +584,12 @@ function Analyze() {
                       <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
                         <stop
                           offset="5%"
-                          stopColor="hsl(var(--primary))"
+                          stopColor="var(--primary)"
                           stopOpacity={0.4}
                         />
                         <stop
                           offset="95%"
-                          stopColor="hsl(var(--primary))"
+                          stopColor="var(--primary)"
                           stopOpacity={0.02}
                         />
                       </linearGradient>
@@ -610,7 +610,7 @@ function Analyze() {
                     <Area
                       type="monotone"
                       dataKey="openings"
-                      stroke="hsl(var(--primary))"
+                      stroke="var(--primary)"
                       strokeWidth={2}
                       fill="url(#trendFill)"
                     />
@@ -652,7 +652,7 @@ function Analyze() {
                     />
                     <Bar
                       dataKey="value"
-                      fill="hsl(var(--accent))"
+                      fill="var(--accent)"
                       radius={[0, 6, 6, 0]}
                     />
                   </BarChart>
