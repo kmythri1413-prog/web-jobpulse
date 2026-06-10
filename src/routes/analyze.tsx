@@ -128,16 +128,16 @@ function Analyze() {
   // ---- Chart data ----
   const comparisonData = useMemo(() => {
     if (!result) return [];
-    const rows = [
-      { label: "Range low", value: result.low, key: "low" as const },
-      { label: "Median", value: result.marketMedian, key: "median" as const },
-      { label: "Range high", value: result.high, key: "high" as const },
+    const rows: { label: string; value: number; key: string }[] = [
+      { label: "Range low", value: result.low, key: "low" },
+      { label: "Median", value: result.marketMedian, key: "median" },
+      { label: "Range high", value: result.high, key: "high" },
     ];
     if (result.hasPkg)
       rows.splice(2, 0, {
         label: "You",
         value: +result.userPkg.toFixed(1),
-        key: "you" as const,
+        key: "you",
       });
     return rows;
   }, [result]);
