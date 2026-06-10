@@ -553,7 +553,7 @@ function Analyze() {
                       />
                     }
                   />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} isAnimationActive={false}>
                     {locationData.map((d) => (
                       <Cell
                         key={d.location}
