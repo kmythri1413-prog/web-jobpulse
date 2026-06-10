@@ -501,7 +501,7 @@ function Analyze() {
                     stroke="var(--muted-foreground)"
                     strokeDasharray="4 4"
                   />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} isAnimationActive={false}>
                     {comparisonData.map((d) => (
                       <Cell
                         key={d.key}
