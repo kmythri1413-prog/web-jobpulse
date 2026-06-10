@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      job_roles: {
+        Row: {
+          base_median: number
+          created_at: string
+          demand: string
+          id: string
+          openings: number
+          role: string
+          salary_by_experience: Json
+          salary_by_location: Json
+          top_skills: Json
+          trend: Json
+          updated_at: string
+        }
+        Insert: {
+          base_median: number
+          created_at?: string
+          demand: string
+          id?: string
+          openings?: number
+          role: string
+          salary_by_experience?: Json
+          salary_by_location?: Json
+          top_skills?: Json
+          trend?: Json
+          updated_at?: string
+        }
+        Update: {
+          base_median?: number
+          created_at?: string
+          demand?: string
+          id?: string
+          openings?: number
+          role?: string
+          salary_by_experience?: Json
+          salary_by_location?: Json
+          top_skills?: Json
+          trend?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
