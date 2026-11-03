@@ -66,7 +66,9 @@ export const Route = createFileRoute("/analyze")({
         <h1 className="text-xl font-semibold text-foreground">
           Couldn't load market data
         </h1>
-        <p className="max-w-sm text-sm text-muted-foreground">{error.message}</p>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "Something went wrong."}
+          </p>
         <button
           onClick={() => router.invalidate()}
           className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
